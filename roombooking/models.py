@@ -5,7 +5,7 @@ class registrationmodel(models.Model):
     firstname=models.CharField(max_length=30,blank=False,default="tanuj")
     lastname=models.CharField(max_length=30,blank=False,default="tanuj")
     email=models.EmailField(primary_key=True,blank=False,max_length=100)
-    password=models.CharField(max_length=20,blank=False)
+    password=models.CharField(max_length=100,blank=False)
     mobile=models.CharField(max_length=15,blank=False)
     address1=models.CharField(max_length=40,blank=False)
     address2=models.CharField(max_length=40,blank=False)

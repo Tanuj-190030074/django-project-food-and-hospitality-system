@@ -10,7 +10,7 @@ from superadmin.models import DineInTables
 from roombooking.models import bookroommodel
 from tablebooking.models import bookmeetingroommodel
 from superadmin.models import Rooms,superadminlogin,meetingrooms
-
+from django.contrib.auth.hashers import make_password,check_password
 
 def indexfunction(request):
     return render(request,"index.html")
@@ -38,13 +38,14 @@ def register(request):
             lastname=request.POST["lastname"]
             email1=request.POST["email"]
             password=request.POST["password"]
+            passsword=make_password(password)
             mobile=request.POST["mobile"]
             address1=request.POST["add1"]
             address2=request.POST["add2"]
             city=request.POST["city"]
             state=request.POST["state"]
             zipcode=request.POST["zipcode"]
-            data=registrationmodel(firstname=firstname,lastname=lastname,email=email1,password=password,mobile=mobile,address1=address1,address2=address2,city=city,state=state,zipcode=zipcode)
+            data=registrationmodel(firstname=firstname,lastname=lastname,email=email1,password=passsword,mobile=mobile,address1=address1,address2=address2,city=city,state=state,zipcode=zipcode)
             data.save()
             subject="Hilton Registration"
             email=email1 #to whom you want to send
@@ -58,13 +59,13 @@ def login(request):
     if request.method=="POST":
         email=request.POST["email"]
         password=request.POST["password"]
-        if registrationmodel.objects.filter(Q(email__iexact=email) & Q(password__iexact=password)).all():
+        if registrationmodel.objects.filter(email=email).all() and check_password(password,registrationmodel.objects.get(email=email).password):
             x=registrationmodel.objects.get(email=email)
             request.session["email"]=email
             request.session["name"]=x.firstname
             print(x.firstname)
             return redirect("indexfunction")
-        elif superadminlogin.objects.filter(Q(email__iexact=email) & Q(password__iexact=password)).all():
+        elif superadminlogin.objects.filter(email__iexact=email).all() and check_password(password,superadminlogin.objects.get(email=email).password):
             request.session["adminlogin"]="true"
             return redirect("adminhomepage")
         else:

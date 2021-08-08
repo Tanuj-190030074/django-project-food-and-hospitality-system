@@ -21,7 +21,7 @@ class Rooms(models.Model):
 
 class superadminlogin(models.Model):
     email=models.EmailField(max_length=30,primary_key=True)
-    password=models.CharField(max_length=15)
+    password=models.CharField(max_length=100)
     class Meta:
         db_table="admindata"
 
